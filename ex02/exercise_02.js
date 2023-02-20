@@ -1,11 +1,8 @@
-/* eslint-disable no-unused-expressions */
-/* eslint-disable spaced-comment */
-/* eslint-disable eqeqeq */
-/* eslint-disable no-plusplus */
-/* eslint-disable prefer-template */
 const fs = require("fs");
 
-const inputFileName = "./input.txt";
+const data = fs.readFileSync("input.txt", "utf8");
+const lineWorld = data.toString().split("\n")[1].split(" ");
+const lineWorldLenght = lineWorld.length;
 
 function searchBeautifulString(quantityOfchange, textString) {
   const quantityUnqLtrs = new Set(textString.split("")).size; // уникальные буквы
