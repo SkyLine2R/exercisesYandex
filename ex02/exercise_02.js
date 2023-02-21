@@ -1,8 +1,8 @@
+console.time("mark");
 const fs = require("fs");
 
 const data = fs.readFileSync("input.txt", "utf8");
 const lineWorld = data.toString().split("\n")[1].split(" ");
-const lineWorldLenght = lineWorld.length;
 
 function searchBeautifulString(quantityOfchange, textString) {
   const quantityUnqLtrs = new Set(textString.split("")).size; // уникальные буквы
@@ -75,17 +75,14 @@ function searchBeautifulString(quantityOfchange, textString) {
   }
 }
 
-fs.readFile(inputFileName, (errRead, data) => {
-  if (errRead) {
-    throw errRead;
-  }
-  const quantityChange = +data.toString().split("\n")[0];
-  const searchString = data.toString().split("\n")[1];
+const quantityChange = +data.toString().split("\n")[0];
+const searchString = data.toString().split("\n")[1];
+console.log("quantityChange " + quantityChange);
+console.log("searchString " + searchString);
+const dataToSave = searchBeautifulString(quantityChange, searchString) + "";
+process.stdout.write(dataToSave);
 
-  const dataToSave = searchBeautifulString(quantityChange, searchString) + "";
-  process.stdout.write(dataToSave);
-});
-
+console.timeEnd("mark");
 // let inputString = "";
 
 /* const read = () =>
