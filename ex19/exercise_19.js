@@ -15,38 +15,50 @@ class Heap {
     return 2 * i + 1;
   }
   dwnNodeRight(i) {
-    return 2 * i + 2;
+    return 2 * i + 2 < this.heapArr.length ? 2 * i + 2 : 2 * i + 1;
   }
   addNode(item) {
     this.heapArr.push(+item);
+
     let i = this.heapArr.length - 1;
+    if (i < 2) {
+      if (i == 1 && this.heapArr[1] > this.heapArr[0]) {
+        [this.heapArr[1], this.heapArr[0]] = [this.heapArr[0], this.heapArr[1]];
+      }
+      return;
+    }
+
+    let j = this.upNode(i);
+
     while (i) {
-      let j = this.upNode(i);
       if (this.heapArr[i] > this.heapArr[j]) {
         [this.heapArr[i], this.heapArr[j]] = [this.heapArr[j], this.heapArr[i]];
         i = j;
+        j = this.upNode(i);
       } else break;
     }
   }
   extractNode() {
-    if (this.heapArr.length <= 2) return this.heapArr.shift();
-    let maxElement = this.heapArr[0];
-    this.heapArr[0] = this.heapArr.pop();
+    if (this.heapArr.length == 1) return this.heapArr.pop();
+
     if (this.heapArr.length == 2) {
       if (this.heapArr[0] < this.heapArr[1]) {
         [this.heapArr[0], this.heapArr[1]] = [this.heapArr[1], this.heapArr[0]];
       }
-      return maxElement;
+      return this.heapArr.shift();
     }
 
-    let i = 0;
+    let maxElement = this.heapArr[0];
+    this.heapArr[0] = this.heapArr.pop();
 
-    while (this.heapArr.length) {
+    let i = 0;
+    while (this.dwnNodeleft(i) < this.heapArr.length) {
       let elemLeft = this.dwnNodeleft(i);
       let elemRight = this.dwnNodeRight(i);
       let highest =
-        this.heapArr[elemLeft] > this.heapArr[elemRight] ? elemLeft : elemRight;
-
+        this.heapArr[elemLeft] >= this.heapArr[elemRight]
+          ? elemLeft
+          : elemRight;
       if (this.heapArr[highest] > this.heapArr[i]) {
         [this.heapArr[highest], this.heapArr[i]] = [
           this.heapArr[i],
@@ -69,6 +81,7 @@ let result = inputData.reduce((arr, item) => {
   } else if (comm == 1) {
     arr.push(myHeap.extractNode());
   }
+
   return arr;
 }, []);
 
