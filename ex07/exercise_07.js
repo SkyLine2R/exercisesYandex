@@ -3,11 +3,6 @@ const fs = require("fs");
 const data = fs.readFileSync("input.txt", "utf8");
 const inputData = data.toString().split("\n");
 const strTime = "2000-01-01T00:00:00Z";
-const clientTime1 = new Date(strTime).setHours(...inputData[0].split(":"));
-const clientTime2 = new Date(strTime).setHours(...inputData[2].split(":"));
-const serverTime = new Date(strTime).setHours(...inputData[1].split(":"));
-
-const correction = Math.round((clientTime2 - clientTime1) / 2);
 const finalTime = new Date(Math.round(serverTime + correction));
 
 console.log(clientTime2 - clientTime1);
