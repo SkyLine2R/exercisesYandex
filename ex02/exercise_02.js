@@ -2,109 +2,65 @@ console.time("mark");
 const fs = require("fs");
 
 const data = fs.readFileSync("input.txt", "utf8");
-const lineWorld = data.toString().split("\n")[1].split(" ");
 
 function searchBeautifulString(quantityOfchange, textString) {
-  const quantityUnqLtrs = new Set(textString.split("")).size; // уникальные буквы
+  const unqLtrs = new Set(textString.split("")); // уникальные буквы
   const textStrLnth = textString.length; // длина строки
 
   if (
     textStrLnth <= quantityOfchange ||
     textStrLnth == quantityOfchange + 1 ||
-    quantityUnqLtrs === 1
+    unqLtrs.size === 1
   )
     return textStrLnth;
 
-  const beatiful1 = search(textString);
-  const beatiful2 = search(textString.split("").reverse().join(""));
-  console.log(beatiful2);
-  console.log(beatiful1);
-
-  return beatiful1 > beatiful2 ? beatiful1 : beatiful2;
+  return search(textString);
 
   function search(textString) {
-    console.log("Количество изменений:" + quantityOfchange);
-    console.log("Строка: " + textString);
+    let bestString = 1;
+    unqLtrs.forEach((letter) => {
+      let quantityChangeNow = quantityOfchange;
 
-    let startSearchPos = 0;
-    let lengthOfBeatifulStr = 1;
+      let endSearchPos = 0;
 
-    while (startSearchPos + 1 < textStrLnth - quantityOfchange) {
-      let restQuantityOfchange = quantityOfchange;
-      let currentLnthOfBeatifulStr = 1;
-      let lastChance = true;
-      const searchSymbol = textString[startSearchPos];
-
-      let currentSearchSymbolPos = startSearchPos + 1;
-
-      console.log("   ");
-      console.log("Старт поиска с нового символа");
-      console.log("startSearchPos" + startSearchPos);
-
-      console.log("searchSymbol " + searchSymbol);
-
-      while (currentSearchSymbolPos + 1 < textStrLnth && lastChance) {
-        console.log("currentLnthOfBeatifulStr " + currentLnthOfBeatifulStr);
-        console.log("currentSearchSymbolPos: " + currentSearchSymbolPos);
-        console.log("restQuantityOfchange: " + restQuantityOfchange);
-
-        if (textString[currentSearchSymbolPos] == searchSymbol) {
-          currentLnthOfBeatifulStr++;
-        } else if (restQuantityOfchange) {
-          restQuantityOfchange--;
-          currentLnthOfBeatifulStr++;
-        } else lastChance = false;
-
-        currentSearchSymbolPos++;
-      }
-      if (lengthOfBeatifulStr < currentLnthOfBeatifulStr)
-        lengthOfBeatifulStr = currentLnthOfBeatifulStr; // текущая лучшая строка
-
-      startSearchPos++;
-
-      while (
-        // подбор позиции следующего стартового символа, чтобы это был отличный от уже пройденного
-        searchSymbol == textString[startSearchPos] &&
-        startSearchPos < textStrLnth - quantityOfchange
+      for (
+        let startSearchPos = 0;
+        startSearchPos < textStrLnth - 1;
+        startSearchPos++
       ) {
-        startSearchPos++;
+        let bestStringNow = 0;
+        if (bestString > textStrLnth - startSearchPos) break;
+        if (
+          startSearchPos - 1 >= 0 &&
+          textString[startSearchPos - 1] != letter
+        ) {
+          quantityChangeNow++;
+        }
+        while (endSearchPos < textStrLnth) {
+          if (textString[endSearchPos] != letter) {
+            if (quantityChangeNow) {
+              quantityChangeNow--;
+            } else {
+              break;
+            }
+          }
+          endSearchPos++;
+        }
+        bestStringNow = endSearchPos - startSearchPos;
+        bestString = bestString < bestStringNow ? bestStringNow : bestString;
+        if (endSearchPos > textStrLnth - 1) break;
       }
-      console.log("startSearchPos " + startSearchPos);
-    }
-    return lengthOfBeatifulStr;
+    });
+    return bestString;
   }
 }
 
 const quantityChange = +data.toString().split("\n")[0];
-const searchString = data.toString().split("\n")[1];
-console.log("quantityChange " + quantityChange);
-console.log("searchString " + searchString);
+
+const searchString = data.toString().split("\n")[1].trim();
 const dataToSave = searchBeautifulString(quantityChange, searchString) + "";
-process.stdout.write(dataToSave);
+
+fs.writeFileSync("output.txt", dataToSave + "\n");
+process.stdout.write(dataToSave + "\n");
 
 console.timeEnd("mark");
-// let inputString = "";
-
-/* const read = () =>
-  process.stdin.on("readable", (chunk) => {
-    //console.log(chunk);
-    return chunk;
-  }); */
-
-//console.log(read());
-// let chunk = process.stdin.read();
-
-// inputString += inputSt;
-
-/*   process.stdin.on("end", () => {
-    console.log("There will be no more data.");
-  }); */
-
-// process.stdout.write("Получено" + inputString);
-// }); */
-/* process.stdin.on("readable", (chunk) => {
-  console.log(chunk);
-  process.stdin.on("read", (chunk1) => {
-    console.log(chunk1);
-  });
-}); */
