@@ -1,31 +1,47 @@
 "use strict";
 const fs = require("fs");
 const data = fs.readFileSync("input.txt", "utf8");
-const inputData = data.toString().split("\n")[0];
+const inputData = +data.toString().trim();
 
-let x1 = 0;
-let x2 = 0;
-let x3 = 0;
+const operationArr = [0, inputData];
+const prevValue = [0, 0];
+const resultArr = [];
 
-const arr = [0, 0, 0];
-const resultArr = [1];
+let operations = 0;
+let i = 1;
 
-while (Math.min(...arr)<inputData) {
-  let lastResult = resultArr[length - 1];
-  arr[0] = lastResult + 1;
-  arr[1] = lastResult * 2;
-  arr[2] = lastResult * 3;
-  if (arr.includes(inputData)) {
-    resultArr.push(inputData);
-    break;
+if (inputData != 0 && inputData != 1) {
+  while (operationArr[i] != 1) {
+    const a = operationArr[i];
+
+    if (!(a % 3)) {
+      operationArr.push(a / 3);
+      prevValue.push(i);
+    } else if (!(a % 2)) {
+      operationArr.push(a / 2);
+      prevValue.push(i);
+    }
+
+    operationArr.push(a - 1);
+    prevValue.push(i);
+    i++;
   }
-  if (Math.max(...arr))
+
+  while (prevValue[i] != 0) {
+    resultArr.push(operationArr[i]);
+    i = prevValue[i];
+  }
 }
 
-const result = inputData;
+resultArr.push(inputData);
+operations = resultArr.length - 1;
 
-fs.writeFileSync("output.txt", result.toString() + "\n");
+fs.writeFileSync(
+  "output.txt",
+  operations.toString() + "\n" + resultArr.join(" ")
+);
 
-console.log(result);
+console.log(resultArr);
+console.log(operationArr);
 
 //process.stdout.write(result.toString() + "\n");
