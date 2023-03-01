@@ -13,17 +13,23 @@ let i = 1;
 if (inputData != 0 && inputData != 1) {
   while (operationArr[i] != 1) {
     const a = operationArr[i];
+    let plus = true;
 
     if (!(a % 3)) {
       operationArr.push(a / 3);
       prevValue.push(i);
-    } else if (!(a % 2)) {
+      plus = false;
+    }
+    if (!(a % 2)) {
       operationArr.push(a / 2);
+      prevValue.push(i);
+      plus = false;
+    }
+    if (!((a - 1) % 3) || !((a - 1) % 2)) {
+      operationArr.push(a - 1);
       prevValue.push(i);
     }
 
-    operationArr.push(a - 1);
-    prevValue.push(i);
     i++;
   }
 
