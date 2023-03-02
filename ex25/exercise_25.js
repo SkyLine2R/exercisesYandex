@@ -8,36 +8,34 @@ const inputArr = inputData[0].split(" ");
 inputArr.forEach((item, index) => (inputArr[index] = +item));
 inputArr.sort((a, b) => a - b);
 
-const arrLenght = Array(inputArr.length + 1);
+const arrLenght = Array(inputArr.length - 1);
 
-console.log(arrLenght);
+inputArr.push(0);
+inputArr.unshift(0);
 
-arrLenght[1] = inputArr[2] - inputArr[1];
-
-for (let i = 3; i < inputArr.length; i++) {
-  arrLenght[i - 1] = inputArr[i] - inputArr[i - 1];
+for (let i = 2; i < inputArr.length - 1; i++) {
+  arrLenght[i - 2] = inputArr[i] - inputArr[i - 1];
 }
-
-arrLenght[arrLenght.length - 1] = Infinity;
-
-arrLenght.shift(Infinity);
+arrLenght.push(Infinity);
+arrLenght.unshift(Infinity);
 
 console.log(inputArr);
 console.log(arrLenght);
 
-let result = arrLenght[0];
 let connect = false;
-for (let i = 0; i < arrLenght.length - 1; i++) {
-  if (arrLenght[i] < arrLenght[i - 1]) {
+
+let i = 2;
+let result = arrLenght[1];
+while (i < arrLenght.length - 1) {
+  if (arrLenght[i] < arrLenght[i + 1]) {
     result += arrLenght[i];
+    i++;
     console.log("connect 1");
-    console.log(arrLenght[i]);
+    //console.log(arrLenght[i]);
   } else {
-    if (i != 0) {
-      console.log("connect 2");
-      console.log(arrLenght[i - 1]);
-      result += arrLenght[i - 1];
-    } else result += arrLenght[i];
+    console.log("connect 2");
+    result += arrLenght[i + 1];
+    i += 2;
   }
 }
 
