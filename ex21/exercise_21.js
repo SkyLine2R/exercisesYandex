@@ -1,30 +1,20 @@
 "use strict";
 const fs = require("fs");
 const data = fs.readFileSync("input.txt", "utf8");
-const inputData = data.toString().trim().split("\n");
+const inputData = +data.toString().trim().split("\n");
 
-const binSet = new Set();
-const binSetOne = new Set();
+const triArr = [0, 0, 1];
 
-let str = "";
-for (let i = 0; i < 10000000; i++) {
-  for (let j = 0; j < 7; j++) {
-    str += Math.round(Math.random());
+for (let i = 0; i <= inputData; i++) {
+  let num = 0;
+  for (let j = 0; j < 3; j++) {
+    num += triArr[j];
   }
-  if (!~str.indexOf("111")) binSet.add(str);
-  else binSetOne.add(str);
-  str = "";
+  [triArr[0], triArr[1], triArr[2]] = [triArr[1], triArr[2], num];
 }
 
-console.log(binSet);
-console.log("Комбинаций без 111");
-console.log(binSet.size);
-console.log("Комбинаций с 111 - ");
-console.log(binSetOne.size);
-console.log(binSetOne);
+const result = inputData ? triArr[triArr.length - 1] : 0;
 
-//const result = arr[arr.length - 1];
+fs.writeFileSync("output.txt", result.toString() + "\n");
 
-//fs.writeFileSync("output.txt", result.toString() + "\n");
-
-//process.stdout.write(result.toString() + "\n");
+process.stdout.write(result.toString() + "\n");
