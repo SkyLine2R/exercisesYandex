@@ -5,15 +5,20 @@ const inputData = fs
   .toString()
   .trim()
   .split("\n");
-
 const [vertex, edge] = [...inputData.shift().trim().split(" ")];
+const result = [];
 
 inputData.forEach((item, index) => {
   inputData[index] = item.split(" ").map((item) => +item);
 });
 
 class graph {
-  constructor(arr, vert) {
+  constructor(arr, vert, edge) {
+    this.vertex = +vert;
+    this.edge = +edge;
+    this.graph.length = this.vertex + 1 || 1;
+    this.graph[0] = 0;
+
     arr.forEach((vertex) => {
       this.graph[vertex[0]]
         ? this.graph[vertex[0]].push(vertex[1])
@@ -25,49 +30,45 @@ class graph {
           : (this.graph[vertex[1]] = [vertex[0]]);
       }
     });
-    this.dfs(1);
-    this.connectivitySearch();
+
+    for (let i = 1; i <= this.vertex; i++) {
+      if (!this.visited[i]) {
+        this.connectivityComponents[i] = [i];
+        this.dfs(i, i);
+      }
+    }
   }
-  dfs(now) {
+
+  dfs(now, vert) {
     if (this.graph[now]) {
       this.visited[now] = true;
       this.graph[now].forEach((neig) => {
         if (!this.visited[neig]) {
-          this.dfs(neig);
+          this.connectivityComponents[vert].push(neig);
+          this.dfs(neig, vert);
         }
       });
     }
   }
-
-  connectivitySearch() {
-    this.visited.forEach((item, index) => {
-      this.connectivity.push(index);
-    });
-    this.connectivity.sort((a, b) => a - b);
-  }
-
   graph = [];
   visited = [];
-  connectivity = [];
+  connectivityComponents = [];
 }
 
 const myGraph = new graph(inputData, vertex);
 
-let result = 0;
-if (vertex) {
-  if (!myGraph.connectivity.length) {
-    result = `1\n1`;
-  } else
-    result = `${myGraph.connectivity.length}\n${myGraph.connectivity.join(
-      " "
-    )}`;
-}
-fs.writeFileSync("output.txt", result.toString());
+myGraph.connectivityComponents.forEach((item) => {
+  if (item) {
+    result.push(item.length);
+    result.push(item.sort((a, b) => a - b).join(" "));
+  }
+});
 
-console.log(myGraph.graph);
-console.log(myGraph.visited.length);
-console.log(myGraph.connectivity);
+result.unshift(result.length / 2);
 
-//console.log(result.join(" "));
-//console.log(result);
+fs.writeFileSync("output.txt", result.join("\n").toString());
+
+console.log(myGraph.connectivityComponents);
+console.log(result.join("\n"));
+
 //process.stdout.write(result.toString() + "\n");
