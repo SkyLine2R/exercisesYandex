@@ -42,15 +42,26 @@ class graph {
   }
   dfs(vertex) {
     const stack = [vertex];
+    let color = 2;
+    let now;
 
     while (stack.length) {
-      let now = stack.pop();
-
-      this.visited[now] = true;
-
+      let prev = now;
+      now = stack.pop();
+      if (!this.visited[now]) {
+        this.visited[now] = 3 - color;
+      } else if (this.visited[now] == this.visited[prev] && now != prev) {
+        console.log("now " + now);
+        console.log("prev " + prev);
+        console.log(this.graph);
+        console.log(this.visited);
+        this.divide = "NO";
+        break;
+      }
+      color = this.visited[now];
       if (this.graph[now]) {
         this.graph[now].forEach((neig) => {
-          if (!this.visited[neig] && !stack.includes(neig)) {
+          if (!this.visited[neig]) {
             this.connectivityComponents[vertex].push(neig);
             stack.push(neig);
           }
@@ -58,25 +69,20 @@ class graph {
       }
     }
   }
+  color = [];
   graph = [];
   visited = [];
   connectivityComponents = [];
+  divide = "YES";
 }
 
 const myGraph = new graph(inputData, vertex);
 
-myGraph.connectivityComponents.forEach((item) => {
-  if (item) {
-    result.push(item.length);
-    result.push(item.sort((a, b) => a - b).join(" "));
-  }
-});
+fs.writeFileSync("output.txt", myGraph.divide.toString());
 
-result.unshift(result.length / 2);
-
-fs.writeFileSync("output.txt", result.join("\n").toString());
-
-console.log(myGraph.connectivityComponents);
+console.log(myGraph.divide);
+console.log("color " + myGraph.visited);
+//console.log(myGraph.connectivityComponents);
 console.log(result.join("\n"));
 console.timeEnd("timetaken");
 //process.stdout.write(result.toString() + "\n");
