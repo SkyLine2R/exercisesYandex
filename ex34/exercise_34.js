@@ -30,7 +30,7 @@ class graph {
     for (let i = 1; i <= this.vertex; i++) {
       if (!this.visited[i]) {
         if (this.dfs(i)) {
-          this.result = "NO";
+          this.result = "-1";
           break;
         }
       }
@@ -38,18 +38,31 @@ class graph {
   }
   dfs(vertex) {
     const stack = [[vertex, 0]];
+    this.visited[vertex] = 1;
     let now;
 
-    while (stack.length) {
-      now = stack.shift();
-      if (!this.visited[now[0]]) {
-        this.visited[now[0]] = 3 - this.visited[now[1]] || 1;
-      } else if (this.visited[now[0]] == this.visited[now[1]]) {
-        return true;
+    while (true) {
+      let last = stack.length - 1;
+      if (this.graph[stack[last]]) {
+        //сделать проверку на серость
+        //если норм - добавлять в стек
+        this.graph[stack[last]].forEach;
       }
-      if (this.graph[now[0]]) {
+    }
+
+    while (stack.length) {
+      //console.log(this.graph);
+      //console.log(stack);
+      now = stack.pop();
+      if (!this.visited[now[0]]) {
+        this.visited[now[0]] = 1;
+      } else if (this.visited[now[0]] == this.visited[now[1]]) {
+        return true; //цикл
+      }
+      if (this.graph[now[0]] == 1) {
         this.graph[now[0]].forEach((neig) => {
           if (!this.visited[neig]) {
+            this.visited[neig] = 1;
             stack.push([neig, now[0]]);
           }
         });
