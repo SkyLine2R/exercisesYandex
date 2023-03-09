@@ -26,11 +26,11 @@ class graph {
         ? this.graph[vertex[0]].push(vertex[1])
         : (this.graph[vertex[0]] = [vertex[1]]);
 
-      if (vertex[0] != vertex[1]) {
+      /*       if (vertex[0] != vertex[1]) {
         this.graph[vertex[1]]
           ? this.graph[vertex[1]].push(vertex[0])
           : (this.graph[vertex[1]] = [vertex[0]]);
-      }
+      } */
     });
 
     for (let i = 1; i <= this.vertex; i++) {
@@ -42,23 +42,19 @@ class graph {
   }
   dfs(vertex) {
     const stack = [vertex];
-    let color = 2;
     let now;
-
     while (stack.length) {
-      let prev = now;
+      console.log(stack);
+      let prev = now || 0;
       now = stack.pop();
+      console.log("now " + now);
+      console.log("prev " + prev);
+      console.log("visited" + this.visited);
       if (!this.visited[now]) {
-        this.visited[now] = 3 - color;
-      } else if (this.visited[now] == this.visited[prev] && now != prev) {
-        console.log("now " + now);
-        console.log("prev " + prev);
-        console.log(this.graph);
-        console.log(this.visited);
-        this.divide = "NO";
-        break;
+        this.visited[now] = 3 - this.visited[prev] || 1;
+      } else if (this.visited[now] == this.visited[prev]) {
+        console.log("WWWWWWWWWWWWWWWWWWW");
       }
-      color = this.visited[now];
       if (this.graph[now]) {
         this.graph[now].forEach((neig) => {
           if (!this.visited[neig]) {
@@ -69,20 +65,26 @@ class graph {
       }
     }
   }
+
   color = [];
   graph = [];
   visited = [];
   connectivityComponents = [];
-  divide = "YES";
 }
 
 const myGraph = new graph(inputData, vertex);
+console.log(myGraph.graph);
+console.log(myGraph.visited);
+/* myGraph.connectivityComponents.forEach((item) => {
+  if (item) {
+    result.push(item.length);
+    result.push(item.sort((a, b) => a - b).join(" "));
+  }
+}); */
 
-fs.writeFileSync("output.txt", myGraph.divide.toString());
+//fs.writeFileSync("output.txt", result.join("\n").toString());
 
-console.log(myGraph.divide);
-console.log("color " + myGraph.visited);
 //console.log(myGraph.connectivityComponents);
-console.log(result.join("\n"));
+//console.log(result.join("\n"));
 console.timeEnd("timetaken");
 //process.stdout.write(result.toString() + "\n");
