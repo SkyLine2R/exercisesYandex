@@ -35,6 +35,19 @@ class graph {
       }
     }
   }
+  dfs2(now) {
+    if (this.graph[now]) {
+      this.visited[now] = 1;
+      this.graph[now].forEach((neig) => {
+        if (!this.visited[neig]) {
+          this.dfs(neig);
+        } else console.log("Обнаружен цикл");
+      });
+      this.visited[now] = 2;
+      this.sortedGraph.push(now);
+    }
+  }
+
   dfs(vertex) {
     const stackPop = () => {
       console.log("Нет достижимых элементов");
@@ -120,7 +133,9 @@ if (myGraph.result == "-1") {
   result = "-1";
 } else result = myGraph.sortedGraph.join(" ");
 
-fs.writeFileSync("output.txt", result.toString() + "\n");
+console.log(myGraph.sortedGraph.reverse().join(" "));
+
+//fs.writeFileSync("output.txt", result.toString() + "\n");
 
 console.log(myGraph.result);
 //console.log(result.join("\n"));
